@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VGAI Website Test</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #fcae63;
+        }
+
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #444;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #fcae63;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the VGAI Website Test</h1>
+        <button class="button" onclick="generateImage()">Generate Image</button>
+    </div>
+
+    <script>
+        function generateImage() {
+            const prompt = "The Baltimore Orioles logo as a giant hologram floating above a futuristic stadium.";
+            const initialModel = "blazing_drive_v10g.safetensors [ca1c1eab]";
+            const apiKey = "fcae63ee-262a-44d9-8941-cdf36ae371ad";
+            const apiUrl = 'https://api.prodia.com/v1/sd/transform';
+
+            const requestBody = {
+                imageUrl: "https://drive.google.com/uc?export=download&id=1zUZfMZXgkc-JaLsH0pAdWleWrgFBh7wa",
+                model: initialModel,
+                steps: 70,
+                cfg_scale: 5,
+                width: 1024,
+                height: 1024,
+                sampler: "LMS Karras",
+                prompt: prompt
+            };
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    "accept": "application/json",
+                    "content-type": "application/json",
+                    "X-Prodia-Key": apiKey
+                },
+                body: JSON.stringify(requestBody)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "succeeded") {
+                    const imageUrl = data.imageUrl;
+                    console.log("Image URL:", imageUrl);
+                    // Display the image or handle as needed
+                } else {
+                    console.log("Error:", data.error_message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
